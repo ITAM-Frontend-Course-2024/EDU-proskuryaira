@@ -89,5 +89,6 @@
         text-align: right;
         font-size: 43px;
         box-shadow: 10px 5px 5px rgb(245, 90, 90);
-    }  
+    }
+  
 </style>
