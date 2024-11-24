@@ -1,25 +1,43 @@
 <script lang="ts">
-    export let data: {note: { id:string; date: string; name: string; content: string}};
+	import "../../../app.css";
+	let note: { id: string; date: string; name: string; content: string } = {
+		id: crypto.randomUUID(),
+		date: new Date().toLocaleString(),
+		name: "Заметка " + new Date().toLocaleString().substring(0, 10),
+		content: "Дорогой дневник..."
+	};
+	async function create_note() {
+		let promise = fetch("https://notes.clayenkitten.dev/note/public", {
+			method: "POST",
+			body: JSON.stringify({ header: note.name, content: note.content }),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		});
+	}
+	function save_note() {
+		create_note();
+		window.location.href = "/notes_app2/list_of_notes";
+	}
 </script>
 
 <header>
-	<span><a href="/notes_app"><img class="logo" src="/заметки.png" alt="add" /></a></span>
+	<span><a href="/notes_app2"><img class="logo" src="/заметки.png" alt="add" /></a></span>
 </header>
 
 <main>
-	<div><input bind:value={ data.note.name } placeholder="Название заметки" class="note_name" /></div>
 	<div>
-		<textarea bind:value={ data.note.content } placeholder="Заметка" class="note" rows="10" cols="30"
+		<input bind:value={note.name} placeholder="Название заметки" class="note_name" />
+		<a href="/notes_app2/list_of_notes"> Перейти к списку заметок </a>
+	</div>
+
+	<div>
+		<textarea bind:value={note.content} placeholder="Заметка" class="note" rows="10" cols="30"
 		></textarea>
 	</div>
 
 	<div>
-		<a href="/notes_app/list_of_notes">
-			<!-- <button on:click={save_note}>Сохранить</button> -->
-		</a>
-		<a href="/notes_app/list_of_notes">
-			<button>Перейти к списку заметок</button>
-		</a>
+		<button on:click={save_note}>Сохранить</button>
 	</div>
 </main>
 <footer>
@@ -68,7 +86,8 @@
 		button {
 			height: 32px;
 			border-radius: 10%;
-            background-color: rgb(255, 240, 254);
+			background-color: rgb(255, 240, 254);
+			padding: 5px;
 		}
 	}
 	footer {

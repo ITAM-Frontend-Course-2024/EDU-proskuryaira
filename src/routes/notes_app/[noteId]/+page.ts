@@ -1,13 +1,13 @@
-export function load({ params }: any) {
-	const noteId = params.noteId;
-	const noteData = JSON.parse(localStorage.getItem(noteId) ?? "{}");
+export async function load({ params }: any) {
+    const noteId = params.noteId;
+    const noteData = JSON.parse(localStorage.getItem(noteId) ?? "{}");
 
-	return {
-		note: {
-			id: `${noteId}`,
-			date: `${noteData.date}`,
-			name: `${noteData.name}`,
-			content: `${noteData.content} `
-		}
-	};
+    return {
+            note: {
+                id: noteId,
+                date: noteData.date,
+                name: noteData.name,
+                content: noteData.content
+        }
+    };
 }

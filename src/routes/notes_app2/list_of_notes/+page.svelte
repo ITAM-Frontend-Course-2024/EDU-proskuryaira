@@ -1,38 +1,29 @@
 <script lang="ts">
 	import "../../../app.css";
-	let notes: Array<{ id: string; date: string; name: string; content: string }> = [];
 
-	export function load_notes() {
-		const keys = Object.keys(localStorage);
-		notes = keys
-			.map(key => {
-				const note = JSON.parse(localStorage.getItem(key) as string);
-				return { id: key, name: note.name, date: note.date, content: note.content };
-			})
-			.filter(note => note.name);
+	let notes: Array<{ id: string; header: string; createdAt: string }> = [];
+	async function list_public() {
+		let response = await fetch("https://notes.clayenkitten.dev/note/public", {
+			headers: {
+				"Content-Type": "application/json"
+			}
+		});
+		let obj = await response.json();
+		notes = obj;
 	}
-	import { onMount } from 'svelte';
+	import { onMount } from "svelte";
 	onMount(() => {
-	    load_notes();
+		list_public();
 	});
-	load_notes();
-	function delete_note(id: string) {
-		localStorage.removeItem(id);
-		load_notes();
-	}
-
-	export let note;
-
 	let searchTerm = "";
 	$: filteredNotes = notes.filter(note =>
-		note.name.toLowerCase().includes(searchTerm.toLowerCase())
+		note.header.toLowerCase().includes(searchTerm.toLowerCase())
 	);
-
 </script>
 
 <header>
-	<h1><a href="/notes_app">&#10024 My notes &#10024</a></h1>
-	<span><a href="/notes_app"><img class="logo" src="/заметки.png" alt="add" /></a></span>
+	<h1><a href="/notes_app2">&#10024 My notes &#10024</a></h1>
+	<span><a href="/notes_app2"><img class="logo" src="/заметки.png" alt="add" /></a></span>
 	<div class="head_elements">
 		<input
 			type="search"
@@ -42,7 +33,7 @@
 			bind:value={searchTerm}
 		/>
 		<span class="creat_newnote_button"
-			><a href="/notes_app/create_note" title="Создать новую заметку"
+			><a href="/notes_app2/create_note" title="Создать новую заметку"
 				><img width="50px" height="50px" src="/add_circle.png" alt="add" /></a
 			></span
 		>
@@ -51,22 +42,17 @@
 
 <main>
 	<ul class="notes">
-		{#each filteredNotes as note}
+		{#each notes as note}
 			<li class="note">
-				<a href={`/notes_app/${note.id}`} class="a_note">
-					<span class="note_name">{note.name}</span>
+				<a href={`/notes_app2/${note.id}`} class="a_note">
+					<span class="note_name">{note.header}</span>
 					<span class="note_date"
-						>{note.date.substring(0, 10)}
-						{note.date.substring(11, 16)}<span>
-							<span class="content">{note.content.substring(0, 800)}</span>
-						</span></span
-					></a
-				>
-				<span><button on:click={delete_note(note.id)}>Удалить заметку</button></span>
+						>{note.createdAt.substring(0, 10)}
+						{note.createdAt.substring(11, 16)}<span>
+				</a>
 			</li>
 		{/each}
 	</ul>
-
 </main>
 <footer>
 	<span class="f_item">
@@ -91,6 +77,7 @@
 	%color_shared {
 		background-color: rgb(172, 137, 167);
 	}
+
 	header {
 		@extend %color_shared;
 		color: rgb(245, 239, 219);
@@ -125,6 +112,7 @@
 		}
 	}
 	main {
+		height: 60%;
 		display: flex;
 		margin: 0;
 		font-family: Arial, sans-serif;
@@ -133,9 +121,9 @@
 		.notes {
 			display: flex;
 			flex-wrap: wrap;
-			gap: 20px;
+			gap: 80px;
 
-			justify-content: space-evenly;
+			justify-content: space-between;
 			padding: 20px;
 			.note {
 				display: flex;
@@ -155,17 +143,17 @@
 				.note_date {
 					color: #715b98;
 				}
-				.content {
-					@extend %color_shared;
-					border-radius: 3%;
-					height: 300px;
-					width: 310px;
-					display: flex;
-					flex-direction: column;
-					font-size: 14px;
-					color: rgb(237, 231, 239);
-					padding: 5px;
-				}
+				// .content {
+				// 	@extend %color_shared;
+				// 	border-radius: 3%;
+				// 	height: 300px;
+				// 	width: 310px;
+				// 	display: flex;
+				// 	flex-direction: column;
+				// 	font-size: 14px;
+				// 	color: rgb(237, 231, 239);
+				// 	padding: 5px;
+				// }
 				button {
 					margin-top: 10px;
 					width: 310px;

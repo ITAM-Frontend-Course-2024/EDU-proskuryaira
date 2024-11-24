@@ -1,9 +1,10 @@
 <script lang="ts">
+    import '../../../app.css';
 	let note: { id: string; date: string; name: string; content: string } = {
 		id: crypto.randomUUID(),
 		date: new Date().toLocaleString(),
-		name: "",
-		content: ""
+		name: "Заметка " + new Date().toLocaleString().substring(0, 10),
+		content: "Дорогой дневник..."
 	};
 	function save_note() {
 		const newNote = {
@@ -14,6 +15,7 @@
 		};
 		if (newNote.name && !localStorage.getItem(newNote.id)) {
 			localStorage.setItem(newNote.id, JSON.stringify(newNote));
+            window.location.href = "/notes_app/list_of_notes"
 		}
 	}
 </script>
@@ -25,6 +27,9 @@
 <main>
 	<div>
 		<input bind:value={note.name} placeholder="Название заметки" class="note_name" />
+        <a href="/notes_app/list_of_notes">
+			Перейти к списку заметок
+		</a>
 	</div>
 
 	<div>
@@ -33,12 +38,7 @@
 	</div>
 
 	<div>
-		<a href="/notes_app/list_of_notes">
-			<button on:click={save_note}>Сохранить</button>
-		</a>
-		<a href="/notes_app/list_of_notes">
-			<button>Перейти к списку заметок</button>
-		</a>
+		<button on:click={save_note}>Сохранить</button>
 	</div>
 </main>
 <footer>
@@ -73,7 +73,7 @@
 	}
 	main {
 		background-color: rgb(172, 137, 167);
-		height: 666px;
+		height: 690px;
 		.note_name {
 			@extend %color_input;
 			height: 30px;
@@ -88,6 +88,7 @@
 			height: 32px;
 			border-radius: 10%;
             background-color: rgb(255, 240, 254);
+            padding: 5px;
 		}
 	}
 	footer {

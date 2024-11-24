@@ -1,3 +1,7 @@
+<script lang="ts">
+    import '../../app.css';
+</script>
+
 <main>
 	<h1><a href="/notes_app">&#10024 My notes &#10024</a></h1>
 	<span
@@ -6,10 +10,11 @@
 		></span
 	>
 	<div>
-		<a href="/notes_app/create_note"><button>Создать заметочку</button></a>
-		<a href="/notes_app/list_of_notes"><button>Все заметочки</button> </a>
+		<a class = "link_that_looks_loke_a_button" href="/notes_app/create_note">Создать заметочку</a>
+		<a class ="link_that_looks_loke_a_button" href="/notes_app/list_of_notes">Все заметочки </a>
 	</div>
 </main>
+
 <footer>
 	<span class="f_item">
 		<span>Телеграм: <a class="link" href="https://t.me/proskuryaira">tg:proskuryaira</a></span>
@@ -30,9 +35,6 @@
 </footer>
 
 <style lang="scss">
-	a {
-		text-decoration: non;
-	}
 	main {
 		background-color: rgb(172, 137, 167);
 		display: flex;
@@ -50,11 +52,23 @@
 			font-style: normal;
 			font-size: 54px;
 		}
-		button {
-			border-radius: 39%;
-			height: 33px;
-			background-color: rgb(255, 240, 254);
-		}
+        .link_that_looks_loke_a_button{
+            display: inline-block; /* Заставляет ссылку вести себя как блок */
+            height: 37px;
+            width: 178px;
+            background-color: rgb(255, 240, 254);
+            border-radius: 39%;
+            color: #715b98;
+            text-align: center; /* центрирует текст внутри */
+            line-height: 37px;
+        }
+        .login{
+            height: 30px;
+        }
+        .public_exit{
+            margin: 10px;
+            padding: 5px;
+        }
 	}
 
 	footer {

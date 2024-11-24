@@ -1,74 +1,94 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-   <title>Сайт с панелью слева</title>
-</head>
-<body>
-    <div class="sidebar">
-        <h2>Навигация</h2>
-        <ul>
-            <li><a href="#section1">Раздел 1</a></li>
-            <li><a href="#section2">Раздел 2</a></li>
-            <li><a href="#section3">Раздел 3</a></li>
-            <li><a href="#section4">Раздел 4</a></li>
-        </ul>
-    </div>
-    <div class="content">
-        <h1>Добро пожаловать</h1>
-        <p>Это главный контент страницы.</p>
-        <h2 id="section1">Раздел 1</h2>
-        <p>Контент раздела 1...</p>
-        <h2 id="section2">Раздел 2</h2>
-        <p>Контент раздела 2...</p>
-        <h2 id="section3">Раздел 3</h2>
-        <p>Контент раздела 3...</p>
-        <h2 id="section4">Раздел 4</h2>
-        <p>Контент раздела 4...</p>
-    </div>
-</body>
-</html>
+<script lang="ts">
+	let text = "";
+	let token: null | string = null;
+	async function login() {
+		let promise = fetch("https://notes.clayenkitten.dev/user/login", {
+			method: "POST",
+			body: JSON.stringify({ login: "proskuryaira" }),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		});
+		let response = await promise;
+		let obj = await response.json();
+		console.log(obj.token);
+		token = obj.token;
+	}
 
-<style>
-body {
-    display: flex; /* Используем flexbox для расположения панели и контента */
-    margin: 0;
-    font-family: Arial, sans-serif;
-}
+	token = "81a7b856-6a19-4aa5-88cd-150c39ab2f58"; // потом надо убрать
 
-.sidebar {
-    width: 250px; /* Ширина панели */
-    background-color: #f4f4f4; /* Цвет фона панели */
-    padding: 15px; /* Отступы внутри панели */
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Тень панели */
-}
+	async function get_username() {
+		if (!token) return;
+		let promise = fetch("https://notes.clayenkitten.dev/user/whoami", {
+			// method: "GET",      метод GET по умолчанию
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: token
+			}
+		});
+		let response = await promise;
+		let text1 = await response.text();
+		text = text1;
+	}
 
-.sidebar h2 {
-    text-align: center;
-}
+	async function list() {
+		if (!token) return;
+		let response = await fetch("https://notes.clayenkitten.dev/note", {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: token
+			}
+		});
+		let obj = await response.json();
+		console.log(obj.token);
+	}
 
-.sidebar ul {
-    list-style: none; /* Убираем маркеры списка */
-    padding: 0;
-}
+	let note_name = "note1";
+	let note_content = "SOmethimg blah blah blah";
+	async function create_note() {
+		if (!token) return;
+		let promise = fetch("https://notes.clayenkitten.dev/note", {
+			method: "POST",
+			body: JSON.stringify({ header: note_name, content: note_content }),
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: token
+			}
+		});
+	}
+	// public
+	let notes: Array<{ id: string; header: string; createdAt: string }> = [];
+	async function list_public() {
+		let response = await fetch("https://notes.clayenkitten.dev/note/public", {
+			headers: {
+				"Content-Type": "application/json"
+			}
+		});
+		let obj = await response.json();
+		// console.log(obj);
+		notes = obj;
+	}
+</script>
 
-.sidebar ul li {
-    margin: 10px 0; /* Отступы между элементами списка */
-}
+<button on:click={login}>Авторизация</button>
+<button on:click={get_username}>Get name</button>
+<button on:click={list}>List of notes?</button>
+<div><button on:click={create_note}>create_note</button></div>
+<div><button on:click={list_public}>list_public</button></div>
+{notes.forEach(note => { console.log(note);})}
+<p>{text}</p>
 
-.sidebar ul li a {
-    text-decoration: none; /* Убираем подчеркивание */
-    color: #333;
-    display: block; /* Чтобы ссылка занимала всю ширину элемента */
-    padding: 8px; /* Отступы для ссылок */
-    border-radius: 4px; /* Закругленные углы */
-}
-
-.sidebar ul li a:hover {
-    background-color: #ddd; /* Цвет при наведении */
-}
-
-.content {
-    flex-grow: 1; /* Заполняет оставшееся пространство */
-    padding: 20px; /* Отступы внутри контента */
-}
-</style>
+<ul class="notes">
+    {#each notes as note}
+        <li class="note">
+            <!-- <a href={`/notes_app/${note.id}`} class="a_note"> -->
+                <span class="note_name">{note.header}</span>
+                <span class="note_date"
+                    >{note.createdAt.substring(0, 10)}
+                    {note.createdAt.substring(11, 16)}<span>
+                        <!-- <span class="content">{note.content.substring(0, 800)}</span> -->
+            <!-- </a> -->
+            <!-- <span><button on:click={delete_note(note.id)}>Удалить заметку</button></span> -->
+        </li>
+    {/each}
+</ul>

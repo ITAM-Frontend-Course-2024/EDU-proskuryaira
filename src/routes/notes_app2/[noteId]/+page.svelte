@@ -1,23 +1,36 @@
 <script lang="ts">
-    export let data: {note: { id:string; date: string; name: string; content: string}};
+	export let data;
 </script>
 
 <header>
-	<span><a href="/notes_app"><img class="logo" src="/заметки.png" alt="add" /></a></span>
+	<span><a href="/notes_app2"><img class="logo" src="/заметки.png" alt="add" /></a></span>
 </header>
 
 <main>
-	<div><input bind:value={ data.note.name } placeholder="Название заметки" class="note_name" /></div>
 	<div>
-		<textarea bind:value={ data.note.content } placeholder="Заметка" class="note" rows="10" cols="30"
+		<input
+			bind:value={data.note.header}
+			placeholder="Название заметки"
+			class="note_name"
+			readonly
+		/>
+	</div>
+	<div>
+		<textarea
+			bind:value={data.note.content}
+			placeholder="Заметка"
+			class="note"
+			rows="10"
+			cols="30"
+			readonly
 		></textarea>
 	</div>
 
 	<div>
-		<a href="/notes_app/list_of_notes">
+		<a href="/notes_app2/list_of_notes">
 			<!-- <button on:click={save_note}>Сохранить</button> -->
 		</a>
-		<a href="/notes_app/list_of_notes">
+		<a href="/notes_app2/list_of_notes">
 			<button>Перейти к списку заметок</button>
 		</a>
 	</div>
@@ -68,7 +81,7 @@
 		button {
 			height: 32px;
 			border-radius: 10%;
-            background-color: rgb(255, 240, 254);
+			background-color: rgb(255, 240, 254);
 		}
 	}
 	footer {
